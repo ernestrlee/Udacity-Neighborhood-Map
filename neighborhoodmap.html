@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+
+    <title>Neighborhood Map</title>
+</head>
+<body>
+    <header>
+        <h1>Neighborhood Map app</h1>
+    </header>
+    <section id="mainContainer" class="container">
+        <div id="locationList">
+            <h2>Points of Interest</h2>
+            <label>Filter by keyword:</label>
+            <input id="filter" data-bind="textInput: filter" placeholder="Enter text to filter locations" />
+            <ul class="location-list" data-bind="foreach: filteredList">
+                <li class="location-item" data-bind="text: name, css: { selected: $data == $root.selectedLocation() }, click: $root.selectLocation"></li>
+            </ul>
+        </div>
+
+        <div id="map"></div>
+    </section>
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/js/knockout-3.4.2.js"></script>
+    <script type="text/javascript" src="/js/neighborhood.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAEB3MvcVYUrjE7cfw7v0UxmvyvlwwVHwY&callback=initMap" onerror="googleMapsError()">
+    </script>
+</body>
+</html>
