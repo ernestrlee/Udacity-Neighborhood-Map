@@ -1,0 +1,151 @@
+﻿* {
+    box-sizing: border-box;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: black;
+}
+
+header{
+    min-height: 70px;
+    margin: 0;
+    vertical-align: middle;
+    padding: 10px 0;
+    background: black;
+    color: white;
+}
+
+header h1 {
+    margin: 5px 10px;
+    font-size: 1.5em;
+}
+
+.container {
+    width: auto;
+    height: 95%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#locationList {
+    width: 100%;
+    padding: 10px;
+    background: #555;
+    color: white;
+    order: 2;
+}
+
+#filter {
+    min-height: 40px;
+    width: 100%;
+    padding: 5px 30px 5px 5px;
+    background-image: url("/images/ic_filter_list_black_24px.svg");
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
+.location-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.location-item {
+    min-height: 40px;
+    line-height: 40px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.location-item:hover {
+    background: #999;
+}
+
+
+
+.location-list .selected {
+    background: #000;
+}
+
+.infoWindow{
+    background: white;
+    color: black;
+}
+
+#map {
+    height: 50%;
+    width: 100%;
+    order: 1;
+    color: white;
+}
+
+
+
+/* Tablet Layout: 960 to 999px. Inherits styles from: Mobile Layout. */
+@media only screen and (min-width: 960px) {
+    header h1 {
+        margin: 5px 10px;
+        font-size: 2em;
+    }
+    
+    #locationList {
+        display: block;
+        width: 30%;
+        height: 100%;
+        padding: 10px;
+        background: #555;
+        color: white;
+        order: 1;
+    }
+    
+    #filter {
+        min-height: 40px;
+        width: 100%;
+        padding: 5px 30px 5px 5px;
+    }
+
+    #map {
+        display: block;
+        width: 70%;
+        height: 100%;
+        order: 2;
+    }
+}
+
+
+/* Desktop Layout: 1000px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+@media only screen and (min-width: 1000px) {
+    header h1 {
+        margin: 5px 10px;
+        font-size: 2em;
+    }
+    
+    #locationList {
+        display: block;
+        width: 30%;
+        height: 100%;
+        padding: 10px;
+        background: #555;
+        color: white;
+        order: 1;
+    }
+
+    #filter {
+        min-height: 40px;
+        width: 100%;
+        padding: 5px 30px 5px 5px;
+    }
+
+    #map {
+        display: block;
+        width: 70%;
+        height: 100%;
+        order: 2;
+    }
+
+}
