@@ -1,5 +1,5 @@
 # Udacity-Neighborhood-Map
-The Neighborhood Map project for Udacity is a single page application that displays a list of locations in a neighborhood and a map of the neighborhood with the locations marked on the map.  This application uses the Google maps API to provide the map on the page as well as the markers of the locations.  The Wikipedia API is also used to list a maximum of 10 linked articles that are within 3000 meters of the selected location.  This application was built using the Knockout JS framework.
+The Neighborhood Map project for Udacity is a single page application that displays a list of locations in a neighborhood and a map of the neighborhood with the locations marked on the map.  This application uses the Google maps API to provide the map on the page as well as the markers of the locations.  The Wikipedia API is also used to list a maximum of 5 linked articles that are within 3000 meters of the selected location.  This application was built using the Knockout JS framework.
 
 
 ## How to run the application
