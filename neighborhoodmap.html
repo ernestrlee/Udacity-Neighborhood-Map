@@ -1,10 +1,20 @@
 ﻿<!DOCTYPE html>
-
+<!-- This neighborhood map app uses the Knockout JS framework -->
+<!-- This neighborhood map app uses Wikipedia APIs to provide links to wikipedia articles -->
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link href="/css/styles.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <!--Set the viewport to fit the device screen width-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Link to google font for "Roboto"-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+    <!--Link to google material icon fonts-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <!--Link to w3schools w3.css for sidebar opening and closing-->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!--Link to style sheet-->
+    <link href="/css/styles.css" rel="stylesheet">
 
     <title>Neighborhood Map</title>
 </head>
@@ -12,21 +22,30 @@
     <header>
         <h1>Neighborhood Map app</h1>
     </header>
-    <section id="mainContainer" class="container">
-        <div id="locationList">
-            <h2>Points of Interest</h2>
-            <label>Filter by keyword:</label>
-            <input id="filter" data-bind="textInput: filter" placeholder="Enter text to filter locations" />
-            <ul class="location-list" data-bind="foreach: filteredList">
-                <li class="location-item" data-bind="text: name, css: { selected: $data == $root.selectedLocation() }, click: $root.selectLocation"></li>
-            </ul>
+    <section id="main-container" class="container">
+        <div id="collapsed-menu" class="w3-sidebar w3-bar-block w3-card" data-bind="visible: !displayMenu()">
+            <button class="menu-button" data-bind="click: toggleMenu"><i class="material-icons">menu</i></button>
+        </div>
+        <div id="menu" class="w3-sidebar w3-bar-block w3-card" data-bind="visible: displayMenu">
+            <div id="list-header">
+                <h2>Points of Interest</h2>
+                <button class="menu-button" data-bind="click: toggleMenu"><i class="material-icons">menu</i></button>
+            </div>
+            <div id="poi-list">
+                <label>Filter by keyword:</label>
+                <input id="filter" data-bind="textInput: filter" placeholder="Enter text to filter locations" />
+                <ul class="location-list" data-bind="foreach: filteredList">
+                    <li class="location-item" data-bind="text: name, css: { selected: $data == $root.selectedLocation() }, click: $root.selectLocation"></li>
+                </ul>
+            </div>
         </div>
 
         <div id="map"></div>
     </section>
-    <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="/js/knockout-3.4.2.js"></script>
-    <script type="text/javascript" src="/js/neighborhood.js"></script>
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/knockout-3.4.2.js"></script>
+    <script src="/js/neighborhood.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAEB3MvcVYUrjE7cfw7v0UxmvyvlwwVHwY&callback=initMap" onerror="googleMapsError()">
     </script>

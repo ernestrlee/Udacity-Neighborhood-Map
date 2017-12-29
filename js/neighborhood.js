@@ -1,6 +1,17 @@
 // Neighborhood map javascript file
 
 // Create a location class with properties
+/**
+* @description Represents a location
+* @constructor
+* @param {number} id - The id for the location
+* @param {string} name - The name of the location
+* @param {string} address - The address of the location
+* @param {number} latitude - The latitude coordinate of the location
+* @param {number} longitude - The longitude coordinate of the location
+* @param {string} locationType - The type of location
+* @param {string} info - Brief information about the location
+*/
 var Location = function (id, name, address, latitude, longitude, locationType, info) {
     var self = this;
     self.id = id;
@@ -22,19 +33,19 @@ var NeighborhoodViewModel = function () {
 
     // Create an array of locations with POI information
     self.pointsOfInterest = [
-        new Location(0, "i-Tea", "20666 Redwood Rd, Castro Valley, CA 94546", 37.6959095, -122.0729139, "drink", "A nice place to get boba."),
-        new Location(1, "Trader Joe's", "22224 Redwood Rd, Castro Valley, CA 94546", 37.68538059999999, -122.0730184, "shopping", "Shopping for groceries."),
-        new Location(2, "Golden Tee Golfland", "2533 Castro Valley Blvd, Castro Valley, CA 94546", 37.6926303, -122.0876865, "entertainment", "Amusement for people of all ages."),
-        new Location(3, "Rita's Italian Ice", "3200 Castro Valley Blvd, Castro Valley, CA 94546", 37.6958653, -122.079708, "food", "Nice treats for a hot day."),
-        new Location(4, "Dampa Filipino Food", "2960 Castro Valley Blvd, Castro Valley, CA 94546", 37.6961902, -122.08274, "food", "This place serves lumpia, need I say more?"),
-        new Location(5, "Lake Chabot", "17600 Lake Chabot Rd, Castro Valley, CA 94546", 37.7172851, -122.1043496, "park", "A place to go fishing and hiking."),
-        new Location(6, "BART Castro Valley Station", "3348 Norbridge Ave, Castro Valley, CA 94546", 37.6925991, -122.0756993, "transportation", "Public transportation that takes all across the bay area.")
+        new Location(0, "i-Tea", "20666 Redwood Rd, Castro Valley, CA 94546", 37.6959095, -122.0729139, "Drink", "A nice place to get boba."),
+        new Location(1, "Trader Joe's", "22224 Redwood Rd, Castro Valley, CA 94546", 37.68538059999999, -122.0730184, "Shopping", "Shopping for groceries."),
+        new Location(2, "Golden Tee Golfland", "2533 Castro Valley Blvd, Castro Valley, CA 94546", 37.6926303, -122.0876865, "Entertainment", "Amusement for people of all ages."),
+        new Location(3, "Rita's Italian Ice", "3200 Castro Valley Blvd, Castro Valley, CA 94546", 37.6958653, -122.079708, "Food", "Nice treats for a hot day."),
+        new Location(4, "Dampa Filipino Food", "2960 Castro Valley Blvd, Castro Valley, CA 94546", 37.6961902, -122.08274, "Food", "This place serves lumpia, need I say more?"),
+        new Location(5, "Lake Chabot", "17600 Lake Chabot Rd, Castro Valley, CA 94546", 37.7172851, -122.1043496, "Park", "A place to go fishing and hiking."),
+        new Location(6, "BART Castro Valley Station", "3348 Norbridge Ave, Castro Valley, CA 94546", 37.6925991, -122.0756993, "Transportation", "Public transportation that takes all across the bay area.")
     ];
 
     // Create an empty array to hold marker information.
     self.markers = [];
-    
-    //Create a marker for each POI, and put them into the markers array.
+
+    //Create an initial list of markers for each POI, and put them into the markers array.
     for (var i = 0; i < self.pointsOfInterest.length; i++) {
         var marker = {
             position: self.pointsOfInterest[i].getPosition(),
@@ -42,11 +53,11 @@ var NeighborhoodViewModel = function () {
             id: self.pointsOfInterest[i].id
         };
         // Populate the markers array in the view model.
-        self.markers.push(marker);                
+        self.markers.push(marker);
     }
-    
+
     // Set an observable to keep track of the filter text
-    self.filter = ko.observable("");
+    self.filter = ko.observable('');
 
     // The code found at https://codepen.io/blakewatson/pen/ZQXNmK was
     // used as reference when writing the function below
@@ -54,7 +65,7 @@ var NeighborhoodViewModel = function () {
     // on the the filter criteria entered into the filter text input
     self.filteredList = ko.computed(function () {
         // If the filter input is empty, display all the POIs
-        if (self.filter() == "") {
+        if (self.filter() == '') {
             // The code below checks to see if google APIs have been loaded before trying
             // to show all the markers.  The code snippet for checking if google APIs have been
             // loaded was found at: https://stackoverflow.com/questions/9228958/how-to-check-if-google-maps-api-is-loaded
@@ -65,13 +76,11 @@ var NeighborhoodViewModel = function () {
                 }
                 refreshMarkers(poiIds);
             }
-
             return self.pointsOfInterest;
         }
 
-        // If there is text in the filter search box, create a list
-        // that matches with the text and the names of the POIs
-        // using a case insensitive match
+        // If there is text in the filter search box, create and return a list
+        // that matches with the text and the names of the POIs using a case insensitive match
         else {
             var updatedList = [];
             var updatedMarkerIds = [];
@@ -81,20 +90,36 @@ var NeighborhoodViewModel = function () {
                     updatedMarkerIds.push(self.pointsOfInterest[i].id);
                 }
             }
-            
             refreshMarkers(updatedMarkerIds);
             return updatedList;
         }
     });
 
-    // Set an observable on the selected location to highlight it
-    // when selected.
+    // Set an observable on the selected location to highlight it when selected.
     self.selectedLocation = ko.observable();
     self.selectLocation = function (location) {
         var marker = self.markers[location.id];
+        // Highlight the POI on the list
         self.selectedLocation(location);
+        // Trigger a click event on the Google map marker to display the infowindow
         google.maps.event.trigger(marker, 'click');
-    };            
+    };
+
+    // Set an observable to display the menu panel
+    self.displayMenu = ko.observable(true);
+    // Toggle the menu to open or close
+    self.toggleMenu = function () {
+        if (self.displayMenu()) {
+            closeMenu();
+            self.displayMenu(false);
+            google.maps.event.trigger(map, 'resize')
+        }
+        else {
+            showMenu();
+            self.displayMenu(true);
+            google.maps.event.trigger(map, 'resize')
+        }
+    };
 }
 
 // Create a variable for the view model for referencing
@@ -112,18 +137,19 @@ function initMap() {
     // longitude coordinates
     var neighborhood = { lat: 37.696401, lng: -122.086353 };
 
-    // Create the map 
+    // Create the map
     map = new google.maps.Map(document.getElementById('map'), {
         center: neighborhood,
         zoom: 14,
         mapTypeControl: false
     });
 
-    var defaultIcon = makeMarkerIcon('7b347b');
-    var highlightedIcon = makeMarkerIcon('2b0e2b');
+    var defaultIcon = makeMarkerIcon('f65858');
+    var highlightedIcon = makeMarkerIcon('9b2929');
 
     // This code snippet below is a modified version of the code found
-    // from the Udacity course ud864
+    // from the Udacity course ud864 and can be found at the link
+    // https://github.com/udacity/ud864/blob/master/Project_Code_5_BeingStylish.html
 
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
@@ -133,7 +159,6 @@ function initMap() {
     // The following code uses the POI array from the view model to create
     // an array of markers when the map is first initialized.
     for (var i = 0; i < vm.pointsOfInterest.length; i++) {
-        
         //Create a marker for each POI, and put them into the markers array.
         var marker = new google.maps.Marker({
             map: map,
@@ -145,11 +170,14 @@ function initMap() {
         });
         // Populate the markers array in the view model.
         vm.markers.push(marker);
-
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function () {
             populateInfoWindow(this, largeInfowindow);
             showMarker(this);
+            map.fitBounds(bounds);
+            map.panTo(this.position);
+            // Update the highlighted location on the list
+            vm.selectedLocation(vm.pointsOfInterest[this.id]);
         });
         // Create mouse over and mouse out listeners to change the color of the icons
         marker.addListener('mouseover', function () {
@@ -158,10 +186,10 @@ function initMap() {
         marker.addListener('mouseout', function () {
             this.setIcon(defaultIcon);
         });
-
+        // Extend the bounds to fit the markers
         bounds.extend(vm.markers[i].position);
     }
-    // Extend the boundaries of the map for each marker
+    // Scale the map to fit the bounds
     map.fitBounds(bounds);
 }
 
@@ -173,17 +201,58 @@ function populateInfoWindow(marker, infowindow) {
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
         var poi = vm.pointsOfInterest[marker.id];
-        var infoWindowContent = "<div class='infoWindow'>" 
-            + "<h3>" + marker.title + "</h3>"
-            + commasToLines(poi.address) + "<br><br>" 
-            + "Description:" + "<br>"
-            + poi.info + "<br><br>"
-            + "lat: " + marker.position.lat() + "<br>"
-            + "lng: " + marker.position.lng() + "<br>"
-            + "</div>";
+        
+        var infoWindowContent = '<div class="infoWindow">'
+            + '<h3>' + marker.title + '</h3>'
+            + 'Description: ' + poi.info + '<br><br>'
+            + 'Address:<br>' + commasToLines(poi.address) + '<br><br>'
+            + 'Wikipedia information around this area:<br>'
+            + '<span id="wikiInfo">Loading resources from Wikipedia...<br></span><br>'
+            + '</div>';
         //infowindow.setContent('<div>' + marker.title + "<br>" + marker.position + '</div>');
         infowindow.setContent(infoWindowContent);
         infowindow.open(map, marker);
+
+        // Perform a Wikipedia AJAX request with JSONP using geosearch, searching within 3000 meters
+        // of given POI coordinates
+        var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=3000&gscoord='
+            + poi.lat + '%7C' + poi.lng + '&format=json&gslimit=5';
+
+        $(document).ready(function () {
+            var $wikiInfo = $('#wikiInfo');
+            // Set an 8 second time out if it takes too long to retrieve information
+            var wikiRequestTimeout = setTimeout(function () {
+                $wikiInfo.text('Failed to load the wikipedia resources.');
+            }, 8000);
+
+            // Set up the AJAX request to obtain and display parts of the response
+            $.ajax({
+                url: wikiUrl,
+                dataType: 'jsonp',
+                success: function (response) {
+                    // Get a list of articles from the response
+                    var articleList = response.query.geosearch;
+                    // If there are no articles, display an error message
+                    if (articleList.length == 0) {
+                        $wikiInfo.text('No information was found on Wikipedia around this location.');
+                    }
+                    else {
+                        $wikiInfo.text('');
+                        for (var i = 0; i < articleList.length; i++) {
+                            var articleId = articleList[i].pageid;
+                            var articleTitle = articleList[i].title;
+                            var url = 'http://en.wikipedia.org/wiki/?curid=' + articleId;
+
+                            // Display a listed link to a Wikipedia article
+                            $wikiInfo.append('<li><a href="' + url + '">' + articleTitle + '</a></li>');
+                        };
+                    }
+                    // Clear the time out since information was received
+                    clearTimeout(wikiRequestTimeout);
+                }
+            });
+        });
+
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function () {
             infowindow.marker = null;
@@ -247,14 +316,43 @@ function toggleBounce(marker) {
 
 // This function will replace all commas with an HTML line break
 function commasToLines(str) {
-    return str.replace(/,/g, "<br>");
+    return str.replace(/,/g, '<br>');
 }
 
-function googleMapsSuccess() {
-    vm.initMap();
-}
-
+// This function displays an error when Google maps cannot be loaded
 function googleMapsError() {
-    var div = document.getElementById("map");
-    div.innerHTML = "There was an error loading Google maps.";
+    var div = document.getElementById('map');
+    div.innerHTML = 'There was an error loading Google maps.';
+}
+
+// This code snipet is a modified version found on w3schools
+// https://www.w3schools.com/jsref/met_win_matchmedia.asp
+// The code watches for changes in the width of the device and 
+// Changes the width of the menu bar
+var mediaWatcher = window.matchMedia("(min-width: 960px)")
+adjustMenuWidth(mediaWatcher); // Call listener function at run time
+mediaWatcher.addListener(adjustMenuWidth); // Attach listener function on state changes
+
+function adjustMenuWidth(media) {
+    if (media.matches) {
+        document.getElementById("map").style.marginLeft = "30%";
+        document.getElementById("menu").style.width = "30%";
+        document.getElementById("map").style.marginLeft = "5%";
+        document.getElementById("collapsed-menu").style.width = "5%";
+    }
+    else {
+        document.getElementById("map").style.marginLeft = "70%";
+        document.getElementById("menu").style.width = "70%";
+        document.getElementById("map").style.marginLeft = "15%";
+        document.getElementById("collapsed-menu").style.width = "15%";
+    }
+}
+
+function showMenu() {
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("collapsed-menu").style.display = 'none';
+}
+function closeMenu() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("collapsed-menu").style.display = "block";
 }
