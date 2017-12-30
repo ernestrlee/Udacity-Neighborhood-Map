@@ -40,21 +40,25 @@ header h1 {
 }
 
 #menu {
-    width: 30%;
+    width: 60%;
     height: 100%;
     padding: 10px;
     background: #555;
     color: white;
     overflow: auto;
+    position: fixed;
+    left: 0;
 }
 
 #collapsed-menu {
-    width: 5%;
+    width: 15%;
     height: 100%;
     padding: 10px;
     text-align: center;
     background: #555;
     color: white;
+    position: fixed;
+    left: 0;
 }
 
 #list-header {
@@ -123,7 +127,11 @@ header h1 {
     width: 100%;
     height: 100%;
     color: white;
-    margin-left: 30%;
+    margin-left: 60%;
+}
+
+#map.open {
+    margin-left: 15%;
 }
 
 /* Layouts for screen widths between 960 to 999px */
@@ -131,6 +139,39 @@ header h1 {
     header h1 {
         margin: 5px 10px;
         font-size: 2em;
+    }
+
+    #menu {
+        width: 30%;
+        height: 100%;
+        padding: 10px;
+        background: #555;
+        color: white;
+        overflow: auto;
+        position: fixed;
+        left: 0;
+    }
+
+    #collapsed-menu {
+        width: 5%;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+        background: #555;
+        color: white;
+        position: fixed;
+        left: 0;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+        color: white;
+        margin-left: 30%;
+    }
+
+    #map.open {
+        margin-left: 5%;
     }
 
     #list-header h2 {
@@ -157,6 +198,38 @@ header h1 {
     header h1 {
         margin: 5px 10px;
         font-size: 2em;
+    }
+
+    #menu {
+        width: 30%;
+        height: 100%;
+        padding: 10px;
+        background: #555;
+        color: white;
+        overflow: auto;
+        position: fixed;
+        left: 0;
+    }
+
+    #collapsed-menu {
+        width: 5%;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+        background: #555;
+        color: white;
+        position: fixed;
+        left: 0;
+    }
+    #map {
+        width: 100%;
+        height: 100%;
+        color: white;
+        margin-left: 30%;
+    }
+
+    #map.open {
+        margin-left: 5%;
     }
 
     #list-header h2 {
