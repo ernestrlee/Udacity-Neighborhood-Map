@@ -11,8 +11,6 @@
     <!--Link to google material icon fonts-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
-    <!--Link to w3schools w3.css for sidebar opening and closing-->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!--Link to style sheet-->
     <link href="/css/styles.css" rel="stylesheet">
 
@@ -23,10 +21,10 @@
         <h1>Neighborhood Map app</h1>
     </header>
     <section id="main-container" class="container">
-        <div id="collapsed-menu" class="w3-sidebar w3-bar-block w3-card" data-bind="visible: !displayMenu()">
+        <div id="collapsed-menu" data-bind="visible: !displayMenu()">
             <button class="menu-button" data-bind="click: toggleMenu"><i class="material-icons">menu</i></button>
         </div>
-        <div id="menu" class="w3-sidebar w3-bar-block w3-card" data-bind="visible: displayMenu">
+        <div id="menu" data-bind="visible: displayMenu">
             <div id="list-header">
                 <h2>Points of Interest</h2>
                 <button class="menu-button" data-bind="click: toggleMenu"><i class="material-icons">menu</i></button>
@@ -40,7 +38,7 @@
             </div>
         </div>
 
-        <div id="map"></div>
+        <div id="map" data-bind="css: { open: !displayMenu() }"></div>
     </section>
 
     <script src="/js/jquery-3.2.1.min.js"></script>
