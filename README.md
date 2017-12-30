@@ -5,7 +5,7 @@ The Neighborhood Map project for Udacity is a single page application that displ
 ## How to run the application
 
 1. Start by downloading all of the files and folders in this git repository onto your computer.
-2. Open the "neighborhoodmap.html" file.  This should open a web browser and display the application.
+2. Open the "index.html" file.  This should open a web browser and display the application.
 
 
 ## How to use the Neighborhood Map app
