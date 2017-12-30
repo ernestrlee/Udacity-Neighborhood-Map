@@ -110,12 +110,12 @@ var NeighborhoodViewModel = function () {
     // Toggle the menu to open or close
     self.toggleMenu = function () {
         if (self.displayMenu()) {
-            closeMenu();
+            //closeMenu();
             self.displayMenu(false);
             google.maps.event.trigger(map, 'resize')
         }
         else {
-            showMenu();
+            //showMenu();
             self.displayMenu(true);
             google.maps.event.trigger(map, 'resize')
         }
@@ -189,8 +189,12 @@ function initMap() {
         // Extend the bounds to fit the markers
         bounds.extend(vm.markers[i].position);
     }
-    // Scale the map to fit the bounds
-    map.fitBounds(bounds);
+    
+    // Add a listener that resizes the map whenever the window size changes
+    // This tip was provided by a Udacity review
+    google.maps.event.addDomListener(window, 'resize', function () {
+        map.fitBounds(bounds);
+    });
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -202,15 +206,11 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.marker = marker;
         var poi = vm.pointsOfInterest[marker.id];
         
-        var infoWindowContent = '<div class="infoWindow">'
-            + '<h3>' + marker.title + '</h3>'
+        var infoContent = '<h3>' + marker.title + '</h3>'
             + 'Description: ' + poi.info + '<br><br>'
             + 'Address:<br>' + commasToLines(poi.address) + '<br><br>'
-            + 'Wikipedia information around this area:<br>'
-            + '<span id="wikiInfo">Loading resources from Wikipedia...<br></span><br>'
-            + '</div>';
-        //infowindow.setContent('<div>' + marker.title + "<br>" + marker.position + '</div>');
-        infowindow.setContent(infoWindowContent);
+            + 'Wikipedia information around this area:<br>';
+        infowindow.setContent('<div class="infoWindow">' + infoContent + '</div>');
         infowindow.open(map, marker);
 
         // Perform a Wikipedia AJAX request with JSONP using geosearch, searching within 3000 meters
@@ -219,12 +219,8 @@ function populateInfoWindow(marker, infowindow) {
             + poi.lat + '%7C' + poi.lng + '&format=json&gslimit=5';
 
         $(document).ready(function () {
-            var $wikiInfo = $('#wikiInfo');
-            // Set an 8 second time out if it takes too long to retrieve information
-            var wikiRequestTimeout = setTimeout(function () {
-                $wikiInfo.text('Failed to load the wikipedia resources.');
-            }, 8000);
-
+            var wikiInfo;
+            
             // Set up the AJAX request to obtain and display parts of the response
             $.ajax({
                 url: wikiUrl,
@@ -234,21 +230,26 @@ function populateInfoWindow(marker, infowindow) {
                     var articleList = response.query.geosearch;
                     // If there are no articles, display an error message
                     if (articleList.length == 0) {
-                        $wikiInfo.text('No information was found on Wikipedia around this location.');
+                        wikiInfo = 'No information was found on Wikipedia around this location.';
                     }
                     else {
-                        $wikiInfo.text('');
+                        wikiInfo = '';
                         for (var i = 0; i < articleList.length; i++) {
                             var articleId = articleList[i].pageid;
                             var articleTitle = articleList[i].title;
                             var url = 'http://en.wikipedia.org/wiki/?curid=' + articleId;
 
                             // Display a listed link to a Wikipedia article
-                            $wikiInfo.append('<li><a href="' + url + '">' + articleTitle + '</a></li>');
+                            wikiInfo += '<li><a href="' + url + '">' + articleTitle + '</a></li>';
                         };
                     }
-                    // Clear the time out since information was received
-                    clearTimeout(wikiRequestTimeout);
+
+                    infowindow.setContent('<div class="infoWindow">' + infoContent + wikiInfo + '</div>');
+                    infowindow.open(map, marker);
+                },
+                error: function () {
+                    infowindow.setContent('<div class="infoWindow">' + infoContent + '-Error loading Wikipedia information.' + '</div>');
+                    infowindow.open(map, marker);
                 }
             });
         });
@@ -322,37 +323,5 @@ function commasToLines(str) {
 // This function displays an error when Google maps cannot be loaded
 function googleMapsError() {
     var div = document.getElementById('map');
-    div.innerHTML = 'There was an error loading Google maps.';
-}
-
-// This code snipet is a modified version found on w3schools
-// https://www.w3schools.com/jsref/met_win_matchmedia.asp
-// The code watches for changes in the width of the device and 
-// Changes the width of the menu bar
-var mediaWatcher = window.matchMedia("(min-width: 960px)")
-adjustMenuWidth(mediaWatcher); // Call listener function at run time
-mediaWatcher.addListener(adjustMenuWidth); // Attach listener function on state changes
-
-function adjustMenuWidth(media) {
-    if (media.matches) {
-        document.getElementById("map").style.marginLeft = "30%";
-        document.getElementById("menu").style.width = "30%";
-        document.getElementById("map").style.marginLeft = "5%";
-        document.getElementById("collapsed-menu").style.width = "5%";
-    }
-    else {
-        document.getElementById("map").style.marginLeft = "70%";
-        document.getElementById("menu").style.width = "70%";
-        document.getElementById("map").style.marginLeft = "15%";
-        document.getElementById("collapsed-menu").style.width = "15%";
-    }
-}
-
-function showMenu() {
-    document.getElementById("menu").style.display = "block";
-    document.getElementById("collapsed-menu").style.display = 'none';
-}
-function closeMenu() {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("collapsed-menu").style.display = "block";
+    alert('There was an error loading Google maps.');
 }
