@@ -322,6 +322,5 @@ function commasToLines(str) {
 
 // This function displays an error when Google maps cannot be loaded
 function googleMapsError() {
-    var div = document.getElementById('map');
     alert('There was an error loading Google maps.');
 }
